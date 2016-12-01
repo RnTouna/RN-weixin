@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <UIKit/UIkit.h>
+#import <UIKit/UIKit.h>
 
 /*! @brief 错误码
  *
@@ -801,4 +801,3 @@ typedef NS_ENUM(UInt64, enAppSupportContentFlag)
 @property (nonatomic, retain) NSString *contentText;
 
 @end
-
