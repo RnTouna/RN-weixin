@@ -149,14 +149,13 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
         mediaMessage.messageAction = aData[@"messageAction"];
         mediaMessage.messageExt = aData[@"messageExt"];
         
+        [mediaMessage setThumbImage:aImage];
         if ([type isEqualToString:RCTWXShareTypeImage]) {
             WXImageObject *imageObject = [WXImageObject new];
             imageObject.imageData = UIImageJPEGRepresentation(aImage, 0.7);
             mediaMessage.mediaObject = imageObject;
         }
         else {
-            [mediaMessage setThumbImage:aImage];
-            
             if (type.length <= 0 || [type isEqualToString:RCTWXShareTypeNews]) {
                 WXWebpageObject* webpageObject = [WXWebpageObject new];
                 webpageObject.webpageUrl = aData[RCTWXShareWebpageUrl];
@@ -206,7 +205,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
             }
             size = CGSizeMake(thumbImageSize,thumbImageSize);
         }
-        [_bridge.imageLoader loadImageWithTag:imageUrl size:size scale:1 resizeMode:UIViewContentModeScaleToFill progressBlock:nil completionBlock:^(NSError *error, UIImage *image) {
+        [_bridge.imageLoader loadImageWithURLRequest:[RCTConvert NSURLRequest:imageUrl] size:size scale:1 clipped:FALSE resizeMode:UIViewContentModeScaleToFill progressBlock:nil partialLoadBlock: nil completionBlock:^(NSError *error, UIImage *image) {
             [self shareToWeixinWithData:aData image:image scene:aScene callBack:aCallBack];
         }];
     }
