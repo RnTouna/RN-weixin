@@ -109,8 +109,8 @@ export function shareToSession(data) {
       .then(() => waitForResponse("SendMessageToWX.Resp"));
 }
 
-export function pay(data) {
+export function pay(data,msgBack,errBack) {
   return nativePayRequest(data)
-      .then(() => waitForResponse("Pay.Resp"));
+      .then(() => waitForResponse("Pay.Resp").then(msgBack,errBack));
 }
 
