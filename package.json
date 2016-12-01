@@ -1,6 +1,6 @@
 {
-  "name": "react-native-wx",
-  "version": "1.0.9",
+  "name": "RN-weixin",
+  "version": "1.1.0",
   "description": "微信登录、分享、支付模块",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/reactnativecn/react-native-wx.git"
+    "url": "git+https://github.com/ykl522/RN-weixin.git"
   },
   "keywords": [
     "react-native",
@@ -23,9 +23,9 @@
   "author": "lvbingru",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/reactnativecn/react-native-wx/issues"
+    "url": "https://github.com/ykl522/RN-weixin/issues"
   },
-  "homepage": "https://github.com/reactnativecn/react-native-wx#readme",
+  "homepage": "https://github.com/ykl522/RN-weixin#readme",
   "dependencies": {
     "es6-promisify": "^3.0.0"
   }
