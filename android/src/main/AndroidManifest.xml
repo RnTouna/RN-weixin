@@ -9,7 +9,7 @@
     <application
         android:allowBackup="true"
         >
-        <meta-data android:name="WX_APPID" android:value="wx6d7bb9df86cbfdb2"/>
+        <meta-data android:name="WX_APPID" android:value="wxb8ed462f81e20286"/>
 
     </application>
 </manifest>
