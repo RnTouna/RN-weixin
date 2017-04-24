@@ -1,5 +1,4 @@
 import { NativeAppEventEmitter, NativeModules } from 'react-native';
-import promisify from 'es6-promisify';
 
 const WeChatAPI = NativeModules.WeChatAPI;
 
@@ -57,24 +56,38 @@ function wrapCheckApi(nativeFunc) {
     return undefined;
   }
 
-  const promisified = promisify(nativeFunc, translateError);
-  return (...args) => {
-    return promisified(...args);
-  };
+  // const promisified = global.Promise(nativeFunc, translateError);
+  // return (...args) => {
+  //   return promisified(...args);
+  // };
+
+  return new Promise((resolve, reject) => {
+      nativeFunc.apply(null, [
+        ...args,
+        (error, result) => {
+          if (!error) {
+            return resolve(result);
+          }
+          if (typeof error === 'string') {
+            return reject(new Error(error));
+          }
+          reject(error);
+        },
+      ]);
+    });
 }
 
 export const isWXAppInstalled = wrapCheckApi(WeChatAPI.isWXAppInstalled);
 export const isWXAppSupportApi = wrapCheckApi(WeChatAPI.isWXAppSupportApi);
 
+
 function wrapApi(nativeFunc) {
   if (!nativeFunc) {
     return undefined;
   }
-
-  const promisified = promisify(nativeFunc, translateError);
-  return async function (...args) {
+  return async (...args) => {
     if (!WeChatAPI.isAppRegistered) {
-      throw new Error('注册应用失败');
+      return Promise.reject(new Error('注册应用失败'));
     }
     const checkInstalled = await isWXAppInstalled();
     if (!checkInstalled) {
@@ -84,9 +97,45 @@ function wrapApi(nativeFunc) {
     if (!checkSupport) {
       throw new Error('微信版本不支持');
     }
-    return await promisified(...args);
+    return new Promise((resolve, reject) => {
+      nativeFunc.apply(null, [
+        ...args,
+        (error, result) => {
+          if (!error) {
+            return resolve(result);
+          }
+          if (typeof error === 'string') {
+            return reject(new Error(error));
+          }
+          reject(error);
+        },
+      ]);
+    });
   };
 }
+
+
+// function wrapApi(nativeFunc) {
+//   if (!nativeFunc) {
+//     return undefined;
+//   }
+
+//   const promisified = global.Promise(nativeFunc, translateError);
+//   return async function (...args) {
+//     if (!WeChatAPI.isAppRegistered) {
+//       throw new Error('注册应用失败');
+//     }
+//     const checkInstalled = await isWXAppInstalled();
+//     if (!checkInstalled) {
+//       throw new Error('没有安装微信!');
+//     }
+//     const checkSupport = await isWXAppSupportApi();
+//     if (!checkSupport) {
+//       throw new Error('微信版本不支持');
+//     }
+//     return await promisified(...args);
+//   };
+// }
 
 const nativeSendAuthRequest = wrapApi(WeChatAPI.login);
 const nativeShareToTimelineRequest = wrapApi(WeChatAPI.shareToTimeline);
