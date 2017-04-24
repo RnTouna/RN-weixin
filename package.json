@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/ykl522/RN-weixin#readme",
   "dependencies": {
-    "es6-promisify": "^3.0.0"
+    "es6-promisify": "^5.0.0"
   }
 }
