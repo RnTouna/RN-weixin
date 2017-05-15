@@ -55,13 +55,11 @@ function wrapCheckApi(nativeFunc) {
   if (!nativeFunc) {
     return undefined;
   }
-
-  // const promisified = global.Promise(nativeFunc, translateError);
-  // return (...args) => {
-  //   return promisified(...args);
-  // };
-
-  return new Promise((resolve, reject) => {
+  return (...args) => {
+    if (!WeChatAPI.isAppRegistered) {
+      return Promise.reject(new Error('registerApp required.'));
+    }
+    return new Promise((resolve, reject) => {
       nativeFunc.apply(null, [
         ...args,
         (error, result) => {
@@ -75,6 +73,26 @@ function wrapCheckApi(nativeFunc) {
         },
       ]);
     });
+  };
+//   // const promisified = global.Promise(nativeFunc, translateError);
+//   // return (...args) => {
+//   //   return promisified(...args);
+//   // };
+
+//   return new Promise((resolve, reject) => {
+//       nativeFunc.apply(null, [
+//         ...args,
+//         (error, result) => {
+//           if (!error) {
+//             return resolve(result);
+//           }
+//           if (typeof error === 'string') {
+//             return reject(new Error(error));
+//           }
+//           reject(error);
+//         },
+//       ]);
+//     });
 }
 
 export const isWXAppInstalled = wrapCheckApi(WeChatAPI.isWXAppInstalled);
